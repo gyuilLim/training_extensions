@@ -444,13 +444,59 @@ YAML</label><div class="sd-tab-content docutils">
 <span class="w">   </span><span class="nt">init_args</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">label_info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
 <span class="w">      </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;dinov2-small&quot;</span>
-<span class="w">      </span><span class="nt">peft</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">      </span><span class="nt">peft</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;dora&quot;</span>
 
 <span class="w">      </span><span class="nt">optimizer</span><span class="p">:</span>
 <span class="w">         </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">torch.optim.AdamW</span>
 <span class="w">         </span><span class="nt">init_args</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">lr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0001</span>
 <span class="w">            </span><span class="nt">weight_decay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.05</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="alternative">
+<h2>Alternative<a class="headerlink" href="#alternative" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Linear Fine-Tuning</strong>: Train only the classification head while keeping all backbone frozen.
+This approach works with <em>all</em> classification backbones.</p></li>
+</ul>
+</section>
+<section id="how-to-use-linear-fine-tuning">
+<h2>How to Use Linear Fine-Tuning<a class="headerlink" href="#how-to-use-linear-fine-tuning" title="Link to this heading">#</a></h2>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-3" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-3">
+API</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">training_extensions.src.otx.backend.native.models.classification.multiclass_models.vit</span><span class="w"> </span><span class="kn">import</span> <span class="n">VisionTransformerMulticlassCls</span>
+
+<span class="c1"># Linear FT = freeze_backbone=True, no PEFT</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">VisionTransformerMulticlassCls</span><span class="p">(</span>
+    <span class="o">...</span><span class="p">,</span>
+    <span class="n">freeze_backbone</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-4" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-4">
+CLI</label><div class="sd-tab-content docutils">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>otx<span class="o">)</span><span class="w"> </span>$<span class="w"> </span>otx<span class="w"> </span>train<span class="w"> </span>...<span class="w"> </span>--model.freeze_backbone<span class="w"> </span><span class="nb">true</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-5" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-5">
+YAML</label><div class="sd-tab-content docutils">
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">task</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MULTI_CLASS_CLS</span>
+<span class="nt">model</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">otx.backend.native.models.classification.multiclass_models.vit.VisionTransformerMulticlassCls</span>
+<span class="w">   </span><span class="nt">init_args</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">label_info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
+<span class="w">      </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;dinov2-small&quot;</span>
+<span class="w">      </span><span class="nt">peft</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">      </span><span class="nt">freeze_backbone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 </div>
@@ -514,6 +560,16 @@ YAML</label><div class="sd-tab-content docutils">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#how-to-use-peft-in-openvino-training-extensions">
    How to Use PEFT in OpenVINO™ Training Extensions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#alternative">
+   Alternative
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#how-to-use-linear-fine-tuning">
+   How to Use Linear Fine-Tuning
   </a>
  </li>
 </ul>
